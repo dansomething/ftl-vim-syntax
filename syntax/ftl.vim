@@ -18,6 +18,9 @@
 " 1.2 tyru:
 "     * Sorry, remove HTML highlight feature.
 "       because ":setfiletype html.ftl" is enough.
+" 1.3 dhansen:
+"     * Re-enable HTML highlight feature since ":setfiletype html.ftl" is NOT enough.
+"     * Enable alternate tags
 "
 " Licensed under the MIT License (MIT):
 "
@@ -50,6 +53,17 @@ elseif exists('b:current_syntax')
 endif
 
 syn case match
+
+" Load html syntax.
+function! s:load_html_syntax()
+    if (exists('b:ftl_no_html') && b:ftl_no_html)
+    \   || (exists('g:ftl_no_html') && g:ftl_no_html)
+        return
+    endif
+    runtime! syntax/html.vim
+    unlet b:current_syntax
+endfunction
+call s:load_html_syntax()
 
 " directives and interpolations
 syn region ftlStartDirective start=+<#+ end=+>+ contains=ftlKeyword, ftlDirective, ftlString, ftlComment
@@ -84,13 +98,18 @@ endif
 FtlHiLink ftlKeyword Statement
 FtlHiLink ftlDirective Statement
 FtlHiLink ftlStartDirective Function
+FtlHiLink ftlStartDirectiveAlt Function
 FtlHiLink ftlEndDirective Function
+FtlHiLink ftlEndDirectiveAlt Function
 FtlHiLink ftlStartUserDirective Function
+FtlHiLink ftlStartUserDirectiveAlt Function
 FtlHiLink ftlEndUserDirective Function
+FtlHiLink ftlEndUserDirectiveAlt Function
 FtlHiLink ftlInterpolation Constant
 FtlHiLink ftlInterpolation2 Constant
 FtlHiLink ftlString Constant
 FtlHiLink ftlComment Comment
+FtlHiLink ftlCommentAlt Comment
 
 delcommand FtlHiLink
 
